@@ -43,19 +43,19 @@ column_expressions = ["atom:link/@href", "atom:title"]
 doc = libxml2.parseFile("test.xml")
 context = doc.xpathNewContext()
 for namespace in namespaces:
-	context.xpathRegisterNs(namespace[0], namespace[1])
+    context.xpathRegisterNs(namespace[0], namespace[1])
 nodelist = context.xpathEval(loop_expression)
 for node in nodelist:
-	context.setContextNode(node)
-	fields = []
-	for column_expression in column_expressions:
-		column_nodelist = context.xpathEval(column_expression)
-		try:
-			fields.append(column_nodelist[0].content)
-		except IndexError:
-			# node wasn't found - place empty string # TODO: make option
-			fields.append("")
-	print delimiter.join(fields)
+    context.setContextNode(node)
+    fields = []
+    for column_expression in column_expressions:
+        column_nodelist = context.xpathEval(column_expression)
+        try:
+            fields.append(column_nodelist[0].content)
+        except IndexError:
+            # node wasn't found - place empty string # TODO: make option
+            fields.append("")
+    print delimiter.join(fields)
 doc.freeDoc()
 context.xpathFreeContext()
 
