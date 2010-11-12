@@ -1,4 +1,2 @@
-- "namespace-hack": option to remove namespaces from document root node / all nodes?
-  - something with doc.removeNsDef(None) ; root = doc.getRootElement() ; #root.removeNsDef(None) ??
+- useful README, -h option for usage information
 - catch other exceptions (xpath syntax error, broken document, etc.)
-- what, if a node wasn't found (xpath returned empty list) - empty string? - exception?
