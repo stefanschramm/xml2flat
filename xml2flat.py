@@ -85,6 +85,12 @@ def parse_cmdline_arguments(args):
             continue
         sys.exit("Unknown option: " + arg)
 
+    if loop_expression == None:
+        sys.exit("The loop expression is required.")
+
+    if len(column_expressions) == 0:
+        sys.exit("At least one column expression is required.")
+
     return filename, delimiter, loop_expression, column_expressions, namespaces, stop_if_node_not_found, lazy_namespaces_hack
 
 
@@ -104,17 +110,26 @@ if __name__ == "__main__":
             # hacky: kick out namespace attributes before parsing document
             text = re.sub(r' xmlns=".*"', "", text)
 
-        doc = libxml2.parseDoc(text)
+        try:
+            doc = libxml2.parseDoc(text)
+        except libxml2.parserError:
+            sys.exit("Unable to parse XML. Probably not 'well-formed'.")
         
         context = doc.xpathNewContext()
         for namespace in namespaces:
             context.xpathRegisterNs(namespace[0], namespace[1])
-        nodelist = context.xpathEval(loop_expression)
+        try:
+            nodelist = context.xpathEval(loop_expression)
+        except libxml2.xpathError:
+            sys.exit("XPath syntax error in loop expression.")
         for node in nodelist:
             context.setContextNode(node)
             fields = []
             for column_expression in column_expressions:
-                column_nodelist = context.xpathEval(column_expression)
+                try:
+                    column_nodelist = context.xpathEval(column_expression)
+                except libxml2.xpathError:
+                    sys.exit("XPath syntax error in column expression.")
                 try:
                     fields.append(column_nodelist[0].content)
                 except IndexError:
