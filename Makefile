@@ -14,6 +14,6 @@ uninstall:
 	rm $(BINDIR)/xml2flat
 	rm $(MANDIR)/xml2flat.1
 
-README:
+README:	doc/xml2flat.1
 	# readme is the manpage
 	MANWIDTH="76" man -P cat -l doc/xml2flat.1 > README
