@@ -47,7 +47,6 @@ XPATH EXPRESSIONS
        XPath here: http://www.w3schools.com/xpath/
 
 
-
 EXAMPLES
        You can  find  examples  on  how  to  use  xml2flat  at  the  wiki:
        https://github.com/stefanschramm/xml2flat/wiki
@@ -55,6 +54,7 @@ EXAMPLES
 
 AUTHOR
        Stefan Schramm <mail@stefanschramm.net>
+
 
 
 
