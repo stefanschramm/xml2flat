@@ -20,7 +20,6 @@
 
 import libxml2
 import sys
-import re
 
 def parse_cmdline_arguments(args):
 
@@ -121,3 +120,4 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         sys.exit("Aborted by user")
+
