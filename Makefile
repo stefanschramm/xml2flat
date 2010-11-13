@@ -3,7 +3,6 @@ BINDIR = $(PREFIX)/bin
 MANDIR = $(PREFIX)/share/man/man1
 
 INSTALL = install
-GROFF = groff
 
 all:	README
 
@@ -17,4 +16,4 @@ uninstall:
 
 README:
 	# readme is the manpage
-	$(GROFF) -man -Tascii doc/xml2flat.1 > README
+	MANWIDTH="76" man -P cat -l doc/xml2flat.1 > README

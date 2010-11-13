@@ -1,61 +1,61 @@
-xml2flat(1)                                                        xml2flat(1)
+xml2flat(1)                                                    xml2flat(1)
 
 
 
-NNAAMMEE
+NAME
        xml2flat - flatten XML files by specifying some XPath expressions
 
 
-SSYYNNOOPPSSIISS
+SYNOPSIS
        xml2flat [OPTIONS] LOOPEXPRESSION COLUMNEXPRESSION...
 
 
-DDEESSCCRRIIPPTTIIOONN
-       xml2flat takes an XML document from a file or standard input, evaluates
-       the XPath expression LOOPEXPRESSION and  iterates  over  the  resulting
-       nodelist. For each node in this list each COLUMNEXPRESSION is evaluated
-       (with the found node as context) and the  content  of  the  first  node
-       addressed  by COLUMNEXPRESSION is printed to standard output, delimited
-       with TAB characters.
+DESCRIPTION
+       xml2flat takes an XML document from a file or standard input, eval‐
+       uates the XPath expression LOOPEXPRESSION  and  iterates  over  the
+       resulting  nodelist.  For each node in this list each COLUMNEXPRES‐
+       SION is evaluated (with the found node as context) and the  content
+       of the first node addressed by COLUMNEXPRESSION is printed to stan‐
+       dard output, delimited with TAB characters.
 
 
-OOPPTTIIOONNSS
+OPTIONS
        -f INPUTFILE
               read data from INPUTFILE instead of STDIN
 
 
        -d DELIMITER
-              use DELIMITER instead of Tab as field  delimiter  when  printing
-              columns
+              use DELIMITER instead of Tab as field delimiter when  print‐
+              ing columns
 
 
        -n NAMESPACEPREFIX NAMESPACEURL
-              register  namespace  NAMESPACEURL as NAMESPACEPREFIX. Needed, if
-              the document uses namespaces.
+              register  namespace NAMESPACEURL as NAMESPACEPREFIX. Needed,
+              if the document uses namespaces.
 
 
-       -s     stop if column-node was not found. Usually, when a node for some
-              column  is  not found, an empty string is returned at this posi-
-              tion. When specifying -s,  xml2flat  will  exit  with  an  error
-              instead.
+       -s     stop if column-node was not found. Usually, when a node  for
+              some  column  is  not  found, an empty string is returned at
+              this position. When specifying -s, xml2flat will  exit  with
+              an error instead.
 
 
-XXPPAATTHH EEXXPPRREESSSSIIOONNSS
-       xml2flat  uses  libxml2  to parse the document and evaluate the LOOPEX-
-       PRESSION and COLUMNEXPRESSIONs. So these have to be in a  XPath  syntax
-       that  libxml2  understands. You can find a nice tutorial on XPath here:
-       http://www.w3schools.com/xpath/
+XPATH EXPRESSIONS
+       xml2flat  uses libxml2 to parse the document and evaluate the LOOP‐
+       EXPRESSION and COLUMNEXPRESSIONs. So these have to be  in  a  XPath
+       syntax  that  libxml2  understands. You can find a nice tutorial on
+       XPath here: http://www.w3schools.com/xpath/
 
 
 
-EEXXAAMMPPLLEESS
-       You  can  find  examples  on  how  to  use  xml2flat   at   the   wiki:
+EXAMPLES
+       You can  find  examples  on  how  to  use  xml2flat  at  the  wiki:
        https://github.com/stefanschramm/xml2flat/wiki
 
 
-AAUUTTHHOORR
+AUTHOR
        Stefan Schramm <mail@stefanschramm.net>
 
 
 
-                                 NOVEMBER 2010                     xml2flat(1)
+                               NOVEMBER 2010                   xml2flat(1)
