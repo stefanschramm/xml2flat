@@ -18,15 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# examples:
-# wget http://events.ccc.de/congress/2010/Fahrplan/schedule.en.xml -q -O - | ./xml2flat.py "//event" "../../@date" "start" "room" "title" -d " "
-# wget http://www.heise.de/newsticker/heise-atom.xml -q -O - | ./xml2flat.py -n "atom" "http://www.w3.org/2005/Atom" "//atom:entry" "atom:link/@href" "atom:title"
-# wget http://www.heise.de/newsticker/heise.rdf -q -O - | ./xml2flat.py -n "rdf" "http://my.netscape.com/rdf/simple/0.9/" "//rdf:item" "rdf:link" "rdf:title"
-#
-# examples with lazy namespace hack:
-# wget http://www.heise.de/newsticker/heise-atom.xml -q -O - | ./xml2flat.py -l "//entry" "link/@href" "title"
-# wget http://www.heise.de/newsticker/heise.rdf -q -O - | ./xml2flat.py -l "//item" "link" "title"
-
 import libxml2
 import sys
 import re
@@ -40,7 +31,6 @@ def parse_cmdline_arguments(args):
     column_expressions = []
     namespaces = []
     stop_if_node_not_found = False
-    lazy_namespaces_hack = False
 
     # parsing and syntax check
     args = iter(args)
@@ -74,9 +64,6 @@ def parse_cmdline_arguments(args):
             # stop if column node not found
             stop_if_node_not_found = True
             continue
-        if arg == '-l':
-            lazy_namespaces_hack = True
-            continue
         if loop_expression == None:
             loop_expression = arg
             continue
@@ -91,30 +78,21 @@ def parse_cmdline_arguments(args):
     if len(column_expressions) == 0:
         sys.exit("At least one column expression is required.")
 
-    return filename, delimiter, loop_expression, column_expressions, namespaces, stop_if_node_not_found, lazy_namespaces_hack
+    return filename, delimiter, loop_expression, column_expressions, namespaces, stop_if_node_not_found
 
 
 if __name__ == "__main__":
 
     try:
         # parse command line options
-        (filename, delimiter, loop_expression, column_expressions, namespaces, stop_if_node_not_found, lazy_namespaces_hack) = parse_cmdline_arguments(sys.argv[1:])
+        (filename, delimiter, loop_expression, column_expressions, namespaces, stop_if_node_not_found) = parse_cmdline_arguments(sys.argv[1:])
 
         # determine data source (file or stdin)
         if filename != None and filename != "-":
-            text = open(filename).read()
+            doc = libxml2.parseFile(filename)
         else:
-            text = sys.stdin.read()
+            doc = libxml2.parseDoc(sys.stdin.read())
 
-        if lazy_namespaces_hack:
-            # hacky: kick out namespace attributes before parsing document
-            text = re.sub(r' xmlns=".*"', "", text)
-
-        try:
-            doc = libxml2.parseDoc(text)
-        except libxml2.parserError:
-            sys.exit("Unable to parse XML. Probably not 'well-formed'.")
-        
         context = doc.xpathNewContext()
         for namespace in namespaces:
             context.xpathRegisterNs(namespace[0], namespace[1])

@@ -1,2 +1,49 @@
-- Very early alpha-stadium. Please don't try to use it in any production-like environment. -
+NAME
 
+xml2flat - flatten XML files by specifying some XPath expressions
+
+
+SYNOPSIS
+
+xml2flat [OPTIONS] LOOPEXPRESSION COLUMNEXPRESSION...
+
+
+DESCRIPTION
+
+xml2flat takes an XML document from a file or standard input, evaluates the XPath expression LOOPEXPRESSION and iterates over the resulting nodelist. For each node in this list each COLUMNEXPRESSION is evaluated (with the found node as context) and the content of the first node addressed by COLUMNEXPRESSION is printed to standard output, delimited with TAB characters.
+
+
+OPTIONS
+
+-f INPUTFILE
+read data from INPUTFILE instead of STDIN
+
+-d DELIMITER
+use DELIMITER instead of Tab as field delimiter when printing columns
+
+-n NAMESPACEPREFIX NAMESPACEURL
+register namespace NAMESPACEURL as NAMESPACEPREFIX. Needed, if the document uses namespaces.
+
+-s
+stop if column-node was not found. Usually, when a node for some column is not found, an empty string is returned at this position. When specifying -s, xml2flat will exit with an error instead.
+
+
+XPATH EXPRESSIONS
+
+xml2flat uses libxml2 to parse the document and evaluate the LOOPEXPRESSION and COLUMNEXPRESSIONs. So these have to be in a XPath syntax that libxml2 understands. You can find a nice tutorial on XPath here: http://www.w3schools.com/xpath/
+
+
+EXAMPLES
+
+wget http://events.ccc.de/congress/2010/Fahrplan/schedule.en.xml -q -O - | xml2flat "//event" "../../@date" "start" "room" "title" -d " "
+
+wget http://www.heise.de/newsticker/heise-atom.xml -q -O - | xml2flat -n "atom" "http://www.w3.org/2005/Atom" "//atom:entry" "atom:link/@href" "atom:title"
+
+wget http://www.heise.de/newsticker/heise.rdf -q -O - | xml2flat -n "rdf" "http://my.netscape.com/rdf/simple/0.9/" "//rdf:item" "rdf:link" "rdf:title"
+
+
+As a dirty hack you can use sed to remove the default namespace declaration from the document. This makes it unnecessary to register the namespaces and allows shorter XPath expressions. But it might destroy the document in some situations.
+
+wget http://www.heise.de/newsticker/heise-atom.xml -q -O - | sed 's/ xmlns=".*"//' | xml2flat "//entry" "link/@href" "title"
+
+wget http://www.heise.de/newsticker/heise.rdf -q -O - | sed 's/ xmlns=".*"//' | xml2flat "//item" "link" "title"
